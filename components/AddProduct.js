@@ -39,22 +39,12 @@ setProduct({
 
 
 function generateQR(){
-
-
-setQrData(JSON.stringify({
-
-name:product.name,
-
-barcode:product.barcode,
-
-category:product.category,
-
-quantity:product.quantity
-
-
-}));
-
-
+	setQrData(JSON.stringify({
+		name: product.name,
+		barcode: product.barcode,
+		category: product.category,
+		quantity: product.quantity,
+	}));
 }
 
 
@@ -69,7 +59,7 @@ try{
 
 const response = await fetch(
 
-"http://localhost:5001/api/products",
+"http://localhost:8080/api/products",
 
 {
 
