@@ -6,8 +6,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 const ProductContext = createContext();
 
 
-const API_URL = "http://localhost:8080/api/products";
-
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/products`;
 
 
 export function ProductProvider({ children }) {

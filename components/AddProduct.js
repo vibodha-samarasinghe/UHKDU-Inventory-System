@@ -59,7 +59,7 @@ try{
 
 const response = await fetch(
 
-"http://localhost:8080/api/products",
+"https://uhkdu-inventory-backend-production.up.railway.app/api/products",
 
 {
 
