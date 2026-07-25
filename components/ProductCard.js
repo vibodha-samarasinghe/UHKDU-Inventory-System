@@ -5,740 +5,642 @@ import { QRCodeCanvas } from "qrcode.react";
 import { useProducts } from "@/context/ProductContext";
 
 
-export default function ProductCard({product}){
+export default function ProductCard({ product }) {
 
 
-const { fetchProducts } = useProducts();
+    const { fetchProducts } = useProducts();
 
 
-const [showQR,setShowQR] = useState(false);
+    const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/products`;
 
-const [editMode,setEditMode] = useState(false);
 
+    const [showQR, setShowQR] = useState(false);
 
+    const [editMode, setEditMode] = useState(false);
 
-const [editedProduct,setEditedProduct] = useState({
 
-...product,
 
-expiry_date: product.expiry_date
-?
-product.expiry_date.substring(0,10)
-:
-""
+    const [editedProduct, setEditedProduct] = useState({
 
-});
+        ...product,
 
+        expiry_date: product.expiry_date
+            ?
+            product.expiry_date.substring(0, 10)
+            :
+            ""
 
+    });
 
 
 
-function handleChange(e){
 
 
-setEditedProduct({
+    function handleChange(e) {
 
-...editedProduct,
 
-[e.target.name]:e.target.value
+        setEditedProduct({
 
-});
+            ...editedProduct,
 
+            [e.target.name]: e.target.value
 
-}
+        });
 
 
+    }
 
 
 
 
 
-// UPDATE PRODUCT
 
-async function saveEdit(){
 
+    // UPDATE PRODUCT
 
-try{
+    async function saveEdit() {
 
 
-const response = await fetch(
+        try {
 
-`http://localhost:5001/api/products/${product.id}`,
 
-{
+            const response = await fetch(
 
-method:"PUT",
+                `${API_URL}/${product.id}`,
 
-headers:{
+                {
 
-"Content-Type":"application/json"
+                    method: "PUT",
 
-},
+                    headers: {
 
+                        "Content-Type": "application/json"
 
-body:JSON.stringify({
+                    },
 
-...editedProduct,
 
-quantity:Number(editedProduct.quantity),
+                    body: JSON.stringify({
 
-price:Number(editedProduct.price)
+                        ...editedProduct,
 
-})
+                        quantity: Number(editedProduct.quantity),
 
-}
+                        price: Number(editedProduct.price)
 
-);
+                    })
 
 
+                }
 
+            );
 
-if(response.ok){
 
 
-alert("Product Updated Successfully");
 
 
-setEditMode(false);
+            if (response.ok) {
 
 
-fetchProducts();
+                alert("Product Updated Successfully");
 
 
-}
+                setEditMode(false);
 
 
-}
+                fetchProducts();
 
-catch(error){
 
-console.log(error);
+            }
 
-alert("Update Failed");
 
-}
+        }
 
 
+        catch (error) {
 
-}
 
+            console.log(error);
 
+            alert("Update Failed");
 
 
+        }
 
 
+    }
 
 
 
 
-// DELETE PRODUCT
 
-async function deleteProduct(){
 
 
-const confirmDelete = window.confirm(
 
-"Delete this product?"
 
-);
+    // DELETE PRODUCT
 
+    async function deleteProduct() {
 
 
-if(!confirmDelete) return;
+        const confirmDelete = window.confirm(
 
+            "Delete this product?"
 
+        );
 
 
-try{
 
+        if (!confirmDelete) return;
 
-const response = await fetch(
 
-`http://localhost:5001/api/products/${product.id}`,
 
-{
 
-method:"DELETE"
 
-}
+        try {
 
-);
 
+            const response = await fetch(
 
+                `${API_URL}/${product.id}`,
 
+                {
 
+                    method: "DELETE"
 
-if(response.ok){
+                }
 
+            );
 
-alert("Product Deleted Successfully");
 
 
-fetchProducts();
 
 
-}
 
+            if (response.ok) {
 
 
-}
+                alert("Product Deleted Successfully");
 
-catch(error){
 
-console.log(error);
+                fetchProducts();
 
-alert("Delete Failed");
 
-}
+            }
 
 
 
-}
+        }
 
 
+        catch (error) {
 
 
+            console.log(error);
 
+            alert("Delete Failed");
 
 
+        }
 
 
-return(
+    }
 
 
-<div className="
-bg-white/70
-backdrop-blur-xl
-border
-border-white
-shadow-xl
-rounded-3xl
-p-6
-hover:scale-105
-transition
-">
 
 
 
 
 
 
-{
 
-editMode ?
+    return (
 
 
+        <div className="
+        bg-white/70
+        backdrop-blur-xl
+        border
+        border-white
+        shadow-xl
+        rounded-3xl
+        p-6
+        hover:scale-105
+        transition
+        ">
 
-(
 
 
-<div>
 
+            {
 
 
-<h2 className="
-text-2xl
-font-bold
-text-green-900
-mb-4
-">
+                editMode ?
 
-Edit Product
 
-</h2>
+                    (
 
 
+                        <div>
 
 
+                            <h2 className="
+                            text-2xl
+                            font-bold
+                            text-green-900
+                            mb-4
+                            ">
 
+                                Edit Product
 
+                            </h2>
 
-<input
 
-className="
-w-full
-p-3
-mb-3
-border
-rounded-xl
-"
 
-name="name"
 
-value={editedProduct.name}
 
-onChange={handleChange}
+                            <input
 
-/>
+                                className="w-full p-3 mb-3 border rounded-xl"
 
+                                name="name"
 
+                                value={editedProduct.name}
 
+                                onChange={handleChange}
 
+                            />
 
 
 
 
-<input
 
-className="
-w-full
-p-3
-mb-3
-border
-rounded-xl
-"
+                            <input
 
-name="category"
+                                className="w-full p-3 mb-3 border rounded-xl"
 
-value={editedProduct.category}
+                                name="category"
 
-onChange={handleChange}
+                                value={editedProduct.category}
 
-/>
+                                onChange={handleChange}
 
+                            />
 
 
 
 
 
+                            <input
 
+                                className="w-full p-3 mb-3 border rounded-xl"
 
-<input
+                                name="barcode"
 
-className="
-w-full
-p-3
-mb-3
-border
-rounded-xl
-"
+                                value={editedProduct.barcode}
 
-name="barcode"
+                                onChange={handleChange}
 
-value={editedProduct.barcode}
+                            />
 
-onChange={handleChange}
 
-/>
 
 
 
+                            <input
 
+                                className="w-full p-3 mb-3 border rounded-xl"
 
+                                type="number"
 
+                                name="quantity"
 
+                                value={editedProduct.quantity}
 
-<input
+                                onChange={handleChange}
 
-className="
-w-full
-p-3
-mb-3
-border
-rounded-xl
-"
+                            />
 
-type="number"
 
-name="quantity"
 
-value={editedProduct.quantity}
 
-onChange={handleChange}
 
-/>
+                            <input
 
+                                className="w-full p-3 mb-3 border rounded-xl"
 
+                                type="number"
 
+                                name="price"
 
+                                value={editedProduct.price}
 
+                                onChange={handleChange}
 
+                            />
 
 
-<input
 
-className="
-w-full
-p-3
-mb-3
-border
-rounded-xl
-"
 
-type="number"
 
-name="price"
+                            <input
 
-value={editedProduct.price}
+                                className="w-full p-3 mb-3 border rounded-xl"
 
-onChange={handleChange}
+                                type="date"
 
-/>
+                                name="expiry_date"
 
+                                value={editedProduct.expiry_date}
 
+                                onChange={handleChange}
 
+                            />
 
 
 
 
 
-<input
+                            <div className="flex gap-3">
 
-className="
-w-full
-p-3
-mb-3
-border
-rounded-xl
-"
 
-type="date"
+                                <button
 
-name="expiry_date"
+                                    onClick={saveEdit}
 
-value={editedProduct.expiry_date}
+                                    className="
+                                    bg-green-800
+                                    text-white
+                                    px-5
+                                    py-2
+                                    rounded-full
+                                    "
 
-onChange={handleChange}
+                                >
 
-/>
+                                    Save
 
+                                </button>
 
 
 
 
+                                <button
 
+                                    onClick={() => setEditMode(false)}
 
+                                    className="
+                                    bg-gray-400
+                                    text-white
+                                    px-5
+                                    py-2
+                                    rounded-full
+                                    "
 
+                                >
 
-<div className="flex gap-3">
+                                    Cancel
 
+                                </button>
 
-<button
 
-onClick={saveEdit}
 
-className="
-bg-green-800
-text-white
-px-5
-py-2
-rounded-full
-"
+                            </div>
 
->
 
-Save
+                        </div>
 
-</button>
 
+                    )
 
 
 
+                    :
 
-<button
 
-onClick={()=>setEditMode(false)}
 
-className="
-bg-gray-400
-text-white
-px-5
-py-2
-rounded-full
-"
+                    (
 
->
 
-Cancel
+                        <>
 
-</button>
 
+                            <h2 className="
+                            text-2xl
+                            font-bold
+                            text-green-900
+                            ">
 
+                                {product.name}
 
-</div>
+                            </h2>
 
 
 
-</div>
 
 
-)
+                            <div className="
+                            mt-4
+                            space-y-2
+                            text-gray-700
+                            ">
 
-:
 
+                                <p>
+                                    Category: {product.category}
+                                </p>
 
 
-(
+                                <p>
+                                    Barcode: {product.barcode}
+                                </p>
 
 
-<>
 
+                                <p>
+                                    Quantity:
+                                    <span className="font-bold text-green-800">
+                                        {product.quantity}
+                                    </span>
+                                </p>
 
 
-<h2 className="
-text-2xl
-font-bold
-text-green-900
-">
 
-{product.name}
+                                <p>
+                                    Price: Rs.{product.price}
+                                </p>
 
-</h2>
 
 
 
+                                <p>
 
+                                    Expiry:
 
+                                    {
+                                        product.expiry_date
+                                            ?
+                                            new Date(product.expiry_date)
+                                                .toISOString()
+                                                .substring(0, 10)
 
+                                            :
 
-<div className="
-mt-4
-space-y-2
-text-gray-700
-">
+                                            "Not Set"
+                                    }
 
+                                </p>
 
 
-<p>
-Category: {product.category}
-</p>
+                            </div>
 
 
 
 
-<p>
-Barcode: {product.barcode}
-</p>
 
 
 
 
 
-<p>
+                            <div className="
+                            flex
+                            gap-3
+                            mt-5
+                            flex-wrap
+                            ">
 
-Quantity:
 
-<span className="
-font-bold
-text-green-800
-">
 
- {product.quantity}
 
-</span>
 
-</p>
+                                <button
 
+                                    onClick={() => setShowQR(!showQR)}
 
+                                    className="
+                                    bg-green-800
+                                    text-white
+                                    px-4
+                                    py-2
+                                    rounded-full
+                                    "
 
+                                >
 
+                                    {
+                                        showQR
+                                            ?
+                                            "Hide QR"
+                                            :
+                                            "View QR"
+                                    }
 
-<p>
 
-Price:
+                                </button>
 
-Rs.{product.price}
 
-</p>
 
 
 
 
+                                <button
 
+                                    onClick={() => setEditMode(true)}
 
+                                    className="
+                                    bg-blue-600
+                                    text-white
+                                    px-4
+                                    py-2
+                                    rounded-full
+                                    "
 
-<p>
+                                >
 
-Expiry:
+                                    Edit
 
-{
+                                </button>
 
-product.expiry_date
 
-?
 
-new Date(product.expiry_date)
-.toISOString()
-.substring(0,10)
 
-:
 
-"Not Set"
 
-}
+                                <button
 
-</p>
+                                    onClick={deleteProduct}
 
+                                    className="
+                                    bg-red-500
+                                    text-white
+                                    px-4
+                                    py-2
+                                    rounded-full
+                                    "
 
+                                >
 
+                                    Delete
 
+                                </button>
 
-</div>
 
 
 
 
+                            </div>
 
 
 
 
 
-<div className="
-flex
-gap-3
-mt-5
-flex-wrap
-">
 
 
 
+                            {
 
+                                showQR &&
 
 
-<button
+                                <div className="
+                                mt-6
+                                text-center
+                                ">
 
-onClick={()=>setShowQR(!showQR)}
 
-className="
-bg-green-800
-text-white
-px-4
-py-2
-rounded-full
-"
+                                    <QRCodeCanvas
 
->
+                                        value={JSON.stringify(product)}
 
-{
+                                        size={180}
 
-showQR
+                                    />
 
-?
 
-"Hide QR"
 
-:
+                                </div>
 
-"View QR"
 
-}
+                            }
 
 
-</button>
 
 
+                        </>
 
 
+                    )
 
 
+            }
 
 
-<button
 
-onClick={()=>setEditMode(true)}
 
-className="
-bg-blue-600
-text-white
-px-4
-py-2
-rounded-full
-"
 
->
+        </div>
 
-Edit
 
-</button>
-
-
-
-
-
-
-
-
-<button
-
-onClick={deleteProduct}
-
-className="
-bg-red-500
-text-white
-px-4
-py-2
-rounded-full
-"
-
->
-
-Delete
-
-</button>
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-
-
-{
-
-showQR &&
-
-
-
-<div className="
-mt-6
-text-center
-">
-
-
-<QRCodeCanvas
-
-value={JSON.stringify(product)}
-
-size={180}
-
-/>
-
-
-
-</div>
-
-
-
-}
-
-
-
-
-</>
-
-
-)
-
-
-}
-
-
-
-
-
-
-</div>
-
-
-)
-
+    );
 
 
 }
