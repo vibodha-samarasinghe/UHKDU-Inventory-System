@@ -1,7 +1,10 @@
-"use client";
+```javascript
+'use client';
 
-import { useState } from "react";
-import { QRCodeCanvas } from "qrcode.react";
+import { useState } from 'react';
+import { QRCodeCanvas } from 'qrcode.react';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL + '/api/products';
 
 
 export default function AddProduct(){
@@ -9,12 +12,12 @@ export default function AddProduct(){
 
 const [product,setProduct] = useState({
 
-name:"",
-category:"",
-barcode:"",
-quantity:"",
-price:"",
-expiry_date:""
+    name:"",
+    category:"",
+    barcode:"",
+    quantity:"",
+    price:"",
+    expiry_date:""
 
 });
 
@@ -25,13 +28,13 @@ const [qrData,setQrData] = useState("");
 
 function handleChange(e){
 
-setProduct({
+    setProduct({
 
-...product,
+        ...product,
 
-[e.target.name]: e.target.value
+        [e.target.name]: e.target.value
 
-});
+    });
 
 }
 
@@ -39,12 +42,16 @@ setProduct({
 
 
 function generateQR(){
-	setQrData(JSON.stringify({
-		name: product.name,
-		barcode: product.barcode,
-		category: product.category,
-		quantity: product.quantity,
-	}));
+
+    setQrData(JSON.stringify({
+
+        name: product.name,
+        barcode: product.barcode,
+        category: product.category,
+        quantity: product.quantity
+
+    }));
+
 }
 
 
@@ -59,40 +66,38 @@ try{
 
 const response = await fetch(
 
-"https://uhkdu-inventory-backend-production.up.railway.app/api/products",
+    API_URL,
 
-{
+    {
 
-method:"POST",
+        method:"POST",
 
-headers:{
+        headers:{
 
-"Content-Type":"application/json"
+            "Content-Type":"application/json"
 
-},
-
-
-body:JSON.stringify({
-
-name:product.name,
-
-barcode:product.barcode,
-
-category:product.category,
-
-price:Number(product.price),
-
-quantity:Number(product.quantity),
-
-description:"",
-
-expiry_date:product.expiry_date
+        },
 
 
-})
+        body:JSON.stringify({
 
+            name:product.name,
 
-}
+            barcode:product.barcode,
+
+            category:product.category,
+
+            price:Number(product.price),
+
+            quantity:Number(product.quantity),
+
+            description:"",
+
+            expiry_date:product.expiry_date
+
+        })
+
+    }
 
 );
 
@@ -101,35 +106,29 @@ expiry_date:product.expiry_date
 const data = await response.json();
 
 
+console.log("Add Response:", data);
+
+
 
 if(response.ok){
 
 
-alert("Product Added Successfully");
+    alert("Product Added Successfully");
 
 
-// clear form
+    setProduct({
 
-setProduct({
+        name:"",
+        category:"",
+        barcode:"",
+        quantity:"",
+        price:"",
+        expiry_date:""
 
-name:"",
-
-category:"",
-
-barcode:"",
-
-quantity:"",
-
-price:"",
-
-expiry_date:""
-
-});
+    });
 
 
-// refresh QR
-
-setQrData("");
+    setQrData("");
 
 
 }
@@ -137,7 +136,7 @@ setQrData("");
 else{
 
 
-alert(data.error);
+    alert(data.error || "Failed to add product");
 
 
 }
@@ -149,10 +148,9 @@ alert(data.error);
 catch(error){
 
 
-console.log(error);
+    console.log("Add Error:", error);
 
-
-alert("Backend Connection Error");
+    alert("Backend Connection Error");
 
 
 }
@@ -218,13 +216,7 @@ Add New Product
 
 <input
 
-className="
-w-full
-p-3
-mb-4
-rounded-xl
-border
-"
+className="w-full p-3 mb-4 rounded-xl border"
 
 name="name"
 
@@ -242,13 +234,7 @@ onChange={handleChange}
 
 <input
 
-className="
-w-full
-p-3
-mb-4
-rounded-xl
-border
-"
+className="w-full p-3 mb-4 rounded-xl border"
 
 name="category"
 
@@ -267,13 +253,7 @@ onChange={handleChange}
 
 <input
 
-className="
-w-full
-p-3
-mb-4
-rounded-xl
-border
-"
+className="w-full p-3 mb-4 rounded-xl border"
 
 name="barcode"
 
@@ -293,13 +273,7 @@ onChange={handleChange}
 
 <input
 
-className="
-w-full
-p-3
-mb-4
-rounded-xl
-border
-"
+className="w-full p-3 mb-4 rounded-xl border"
 
 type="number"
 
@@ -321,13 +295,7 @@ onChange={handleChange}
 
 <input
 
-className="
-w-full
-p-3
-mb-4
-rounded-xl
-border
-"
+className="w-full p-3 mb-4 rounded-xl border"
 
 type="number"
 
@@ -349,13 +317,7 @@ onChange={handleChange}
 
 <input
 
-className="
-w-full
-p-3
-mb-6
-rounded-xl
-border
-"
+className="w-full p-3 mb-6 rounded-xl border"
 
 type="date"
 
@@ -499,3 +461,4 @@ size={200}
 
 
 }
+```

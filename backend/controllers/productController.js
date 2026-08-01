@@ -1,22 +1,22 @@
-const db = require("../config/db");
+const Product = require("../models/Product");
 
 
 // Get All Products
-exports.getProducts = (req, res) => {
+exports.getProducts = async (req, res) => {
 
-    const sql = "SELECT * FROM products";
+    try {
 
-    db.query(sql, (err, result) => {
+        const products = await Product.find();
 
-        if (err) {
-            return res.status(500).json({
-                error: err.message
-            });
-        }
+        res.json(products);
 
-        res.json(result);
+    } catch (err) {
 
-    });
+        res.status(500).json({
+            error: err.message
+        });
+
+    }
 
 };
 
@@ -24,61 +24,42 @@ exports.getProducts = (req, res) => {
 
 
 // Add Product
-exports.addProduct = (req, res) => {
+exports.addProduct = async (req, res) => {
 
-    const {
-        name,
-        barcode,
-        category,
-        price,
-        quantity,
-        description,
-        expiry_date
-    } = req.body;
+    try {
 
+        const product = new Product({
 
-    const sql = `
-    INSERT INTO products
-    (name, barcode, category, price, quantity, description, expiry_date)
-    VALUES (?,?,?,?,?,?,?)
-    `;
+            name: req.body.name,
+            barcode: req.body.barcode,
+            category: req.body.category,
+            price: req.body.price,
+            quantity: req.body.quantity,
+            description: req.body.description,
+            expiryDate: req.body.expiry_date,
+            department: req.body.department
+
+        });
 
 
-    db.query(
-        sql,
-        [
-            name,
-            barcode,
-            category,
-            price,
-            quantity,
-            description,
-            expiry_date
-        ],
-
-        (err,result)=>{
-
-            if(err){
-
-                return res.status(500).json({
-                    error:err.message
-                });
-
-            }
+        const savedProduct = await product.save();
 
 
-            res.json({
+        res.json({
 
-                message:"Product Added Successfully",
+            message: "Product Added Successfully",
+            id: savedProduct._id
 
-                id:result.insertId
-
-            });
+        });
 
 
-        }
-    );
+    } catch (err) {
 
+        res.status(500).json({
+            error: err.message
+        });
+
+    }
 
 };
 
@@ -87,82 +68,43 @@ exports.addProduct = (req, res) => {
 
 
 
-// Update Full Product
-exports.updateQuantity = (req,res)=>{
+// Update Product
+exports.updateQuantity = async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
 
 
-    const {id}=req.params;
+        await Product.findByIdAndUpdate(
+            id,
+            {
 
-
-    const {
-        name,
-        barcode,
-        category,
-        price,
-        quantity,
-        expiry_date
-
-    } = req.body;
-
-
-
-    const sql = `
-
-    UPDATE products SET
-
-    name=?,
-    barcode=?,
-    category=?,
-    price=?,
-    quantity=?,
-    expiry_date=?
-
-    WHERE id=?
-
-    `;
-
-
-
-    db.query(
-
-        sql,
-
-        [
-            name,
-            barcode,
-            category,
-            price,
-            quantity,
-            expiry_date,
-            id
-        ],
-
-
-        (err)=>{
-
-
-            if(err){
-
-                return res.status(500).json({
-                    error:err.message
-                });
+                name: req.body.name,
+                barcode: req.body.barcode,
+                category: req.body.category,
+                price: req.body.price,
+                quantity: req.body.quantity,
+                expiryDate: req.body.expiry_date
 
             }
+        );
 
 
+        res.json({
 
-            res.json({
+            message: "Product Updated Successfully"
 
-                message:"Product Updated Successfully"
-
-            });
-
+        });
 
 
-        }
+    } catch (err) {
 
-    );
+        res.status(500).json({
+            error: err.message
+        });
 
+    }
 
 };
 
@@ -172,45 +114,29 @@ exports.updateQuantity = (req,res)=>{
 
 
 // Delete Product
-exports.deleteProduct = (req,res)=>{
+exports.deleteProduct = async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
 
 
-    const {id}=req.params;
+        await Product.findByIdAndDelete(id);
 
 
+        res.json({
 
-    db.query(
+            message: "Product Deleted Successfully"
 
-        "DELETE FROM products WHERE id=?",
-
-        [id],
-
-
-        (err)=>{
+        });
 
 
-            if(err){
+    } catch (err) {
 
-                return res.status(500).json({
-                    error:err.message
-                });
+        res.status(500).json({
+            error: err.message
+        });
 
-            }
-
-
-
-            res.json({
-
-                message:"Product Deleted Successfully"
-
-            });
-
-
-
-        }
-
-
-    );
-
+    }
 
 };
