@@ -14,7 +14,6 @@ import { useProducts } from "@/context/ProductContext";
 export default function Products(){
 
 
-
 const { products = [], loading } = useProducts();
 
 
@@ -30,8 +29,6 @@ const [selectedProduct,setSelectedProduct] = useState(null);
 
 
 
-// Loading
-
 if(loading){
 
 return (
@@ -42,7 +39,7 @@ pt-28
 flex
 justify-center
 items-center
-text-green-900
+text-white
 text-xl
 font-bold
 ">
@@ -59,9 +56,6 @@ Loading Products...
 
 
 
-
-
-// Categories
 
 const categories = [
 
@@ -86,9 +80,6 @@ products
 
 
 
-
-// Search + Filter
-
 const filteredProducts = products.filter(product=>{
 
 
@@ -97,8 +88,6 @@ const matchSearch = product.name
 .toLowerCase()
 
 .includes(search.toLowerCase());
-
-
 
 
 
@@ -116,8 +105,6 @@ product.category === category;
 
 
 
-
-
 return matchSearch && matchCategory;
 
 
@@ -130,22 +117,19 @@ return matchSearch && matchCategory;
 
 
 
-
-
-
 return(
 
 
-<main className="
+<main
+
+className="
 min-h-screen
 pt-28
 px-4
 sm:px-10
-bg-gradient-to-br
-from-green-50
-via-white
-to-green-100
-">
+"
+
+>
 
 
 
@@ -153,12 +137,16 @@ to-green-100
 
 
 
-<h1 className="
+<h1
+
+className="
 text-3xl
 sm:text-4xl
 font-bold
-text-green-900
-">
+text-white
+"
+
+>
 
 Hospital Products
 
@@ -168,10 +156,15 @@ Hospital Products
 
 
 
-<p className="
-text-gray-600
+
+<p
+
+className="
+text-green-100
 mt-2
-">
+"
+
+>
 
 Manage UHKDU Hospital Inventory Products
 
@@ -185,17 +178,19 @@ Manage UHKDU Hospital Inventory Products
 
 
 
-{/* Search + Filter */}
+{/* Search */}
 
 
+<div
 
-<div className="
+className="
 flex
 gap-5
 mt-8
 flex-wrap
-">
+"
 
+>
 
 
 
@@ -210,17 +205,22 @@ rounded-xl
 border
 w-full
 sm:w-80
+bg-white/70
+backdrop-blur-xl
+outline-none
 "
+
 
 placeholder="Search Product..."
 
+
 value={search}
+
 
 onChange={(e)=>setSearch(e.target.value)}
 
+
 />
-
-
 
 
 
@@ -235,11 +235,16 @@ className="
 p-4
 rounded-xl
 border
+bg-white/70
+backdrop-blur-xl
 "
+
 
 value={category}
 
+
 onChange={(e)=>setCategory(e.target.value)}
+
 
 >
 
@@ -262,7 +267,6 @@ value={cat}
 </option>
 
 
-
 ))
 
 }
@@ -275,7 +279,6 @@ value={cat}
 
 
 
-
 </div>
 
 
@@ -286,18 +289,22 @@ value={cat}
 
 
 
-{/* Products Grid */}
+{/* Product Cards */}
 
 
 
-<div className="
+<div
+
+className="
 grid
 grid-cols-1
 sm:grid-cols-2
 lg:grid-cols-3
 gap-8
 mt-10
-">
+"
+
+>
 
 
 
@@ -310,11 +317,14 @@ filteredProducts.length === 0 ?
 
 (
 
+<div
 
-<div className="
-text-gray-600
+className="
+text-white
 text-xl
-">
+"
+
+>
 
 No Products Found
 
@@ -327,12 +337,26 @@ No Products Found
 :
 
 
-
 filteredProducts.map(product=>(
 
 
 
-<div key={product.id}>
+<div
+
+key={product._id || product.id}
+
+className="
+bg-white/25
+backdrop-blur-xl
+border
+border-white/30
+rounded-3xl
+p-5
+shadow-2xl
+"
+
+>
+
 
 
 
@@ -342,24 +366,28 @@ filteredProducts.map(product=>(
 product.quantity < 100 &&
 
 
+<div
 
-<div className="
-bg-red-100
-text-red-700
+className="
+bg-red-500/80
+text-white
 px-4
 py-2
 rounded-xl
 mb-3
 font-semibold
-">
+"
+
+>
 
 ⚠️ Low Stock
 
 </div>
 
 
-
 }
+
+
 
 
 
@@ -385,12 +413,12 @@ onClick={()=>setSelectedProduct(product)}
 
 className="
 mt-4
-bg-green-800
+bg-green-700
 text-white
 px-6
 py-3
 rounded-full
-hover:bg-green-900
+hover:bg-green-800
 w-full
 "
 
@@ -429,33 +457,39 @@ w-full
 
 
 
-{/* QR Preview */}
-
-
-
 {
 
 selectedProduct &&
 
 
 
-<div className="
+<div
+
+className="
 mt-10
-bg-white/70
+bg-white/25
 backdrop-blur-xl
+border
+border-white/30
 rounded-3xl
 p-6
-shadow-xl
+shadow-2xl
 max-w-md
-">
+"
+
+>
 
 
-<h2 className="
+<h2
+
+className="
 text-xl
 font-bold
-text-green-900
+text-white
 mb-4
-">
+"
+
+>
 
 QR Preview
 
@@ -476,10 +510,6 @@ product={selectedProduct}
 
 
 }
-
-
-
-
 
 
 

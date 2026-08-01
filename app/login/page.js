@@ -15,9 +15,7 @@ import { FcGoogle } from "react-icons/fc";
 export default function Login(){
 
 
-
 const router = useRouter();
-
 
 
 const {
@@ -46,8 +44,6 @@ const [isRegister,setIsRegister] = useState(false);
 
 
 
-
-
 async function handleSubmit(){
 
 
@@ -66,9 +62,7 @@ password
 );
 
 
-
 alert("Account Created Successfully");
-
 
 
 setIsRegister(false);
@@ -89,13 +83,10 @@ password
 );
 
 
-
 router.push("/");
 
 
-
 }
-
 
 
 
@@ -105,7 +96,6 @@ catch(error){
 
 
 alert(error.message);
-
 
 
 }
@@ -125,7 +115,6 @@ alert(error.message);
 async function handleGoogle(){
 
 
-
 try{
 
 
@@ -133,7 +122,6 @@ await googleLogin();
 
 
 router.push("/");
-
 
 
 }
@@ -144,12 +132,10 @@ catch(error){
 alert(error.message);
 
 
-
 }
 
 
 }
-
 
 
 
@@ -162,47 +148,56 @@ alert(error.message);
 return(
 
 
-<main className="
+<main
+
+className="
 min-h-screen
 flex
 items-center
 justify-center
-bg-gradient-to-br
-from-green-50
-via-white
-to-green-100
-">
+pt-20
+px-4
+"
+
+>
 
 
 
 
 
 
+<div
 
-<div className="
-w-96
-bg-white/40
-backdrop-blur-xl
+className="
+w-full
+max-w-md
+bg-white/25
+backdrop-blur-2xl
 border
-border-white/50
-shadow-xl
+border-white/30
+shadow-2xl
 rounded-3xl
 p-10
-">
+"
+
+>
 
 
 
 
 
 
+<h1
 
-<h1 className="
+className="
 text-3xl
 font-bold
-text-green-900
+text-white
 text-center
 mb-8
-">
+"
+
+>
 
 
 {
@@ -232,22 +227,30 @@ isRegister
 
 <input
 
+
 className="
 w-full
 p-3
 rounded-xl
 border
+border-white/40
 mb-4
-bg-white/70
+bg-white/60
+outline-none
 "
+
 
 type="email"
 
+
 placeholder="Email Address"
+
 
 value={email}
 
+
 onChange={(e)=>setEmail(e.target.value)}
+
 
 />
 
@@ -259,25 +262,32 @@ onChange={(e)=>setEmail(e.target.value)}
 
 
 
-
 <input
+
 
 className="
 w-full
 p-3
 rounded-xl
 border
+border-white/40
 mb-5
-bg-white/70
+bg-white/60
+outline-none
 "
+
 
 type="password"
 
+
 placeholder="Password"
+
 
 value={password}
 
+
 onChange={(e)=>setPassword(e.target.value)}
+
 
 />
 
@@ -291,18 +301,21 @@ onChange={(e)=>setPassword(e.target.value)}
 
 <button
 
+
 onClick={handleSubmit}
+
 
 className="
 w-full
-bg-green-800
+bg-green-700/90
 text-white
 py-3
 rounded-full
 font-semibold
-hover:bg-green-900
+hover:bg-green-800
 transition
 "
+
 
 >
 
@@ -332,25 +345,29 @@ isRegister
 
 
 
-<div className="
+<div
+
+className="
 flex
 items-center
 gap-3
 my-6
-">
+"
+
+>
 
 
-<div className="flex-1 h-px bg-gray-300"></div>
+<div className="flex-1 h-px bg-white/50"></div>
 
 
-<span className="text-gray-500">
+<span className="text-white">
 
 OR
 
 </span>
 
 
-<div className="flex-1 h-px bg-gray-300"></div>
+<div className="flex-1 h-px bg-white/50"></div>
 
 
 </div>
@@ -365,11 +382,14 @@ OR
 
 <button
 
+
 onClick={handleGoogle}
+
 
 className="
 w-full
-bg-white
+bg-white/90
+text-gray-700
 border
 py-3
 rounded-full
@@ -378,9 +398,10 @@ flex
 items-center
 justify-center
 gap-3
-hover:bg-gray-100
+hover:bg-white
 transition
 "
+
 
 >
 
@@ -403,14 +424,17 @@ Continue with Google
 
 <button
 
+
 onClick={()=>setIsRegister(!isRegister)}
+
 
 className="
 mt-6
 w-full
-text-green-800
+text-white
 font-semibold
 "
+
 
 >
 
@@ -440,7 +464,6 @@ isRegister
 
 
 </div>
-
 
 
 
