@@ -9,6 +9,7 @@ const ProductContext = createContext();
 const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/api/products`;
 
 
+
 export function ProductProvider({ children }) {
 
 
@@ -18,7 +19,7 @@ export function ProductProvider({ children }) {
 
 
 
-    // Load products when app starts
+
     useEffect(() => {
 
         fetchProducts();
@@ -28,43 +29,73 @@ export function ProductProvider({ children }) {
 
 
 
-    // GET ALL PRODUCTS
-    async function fetchProducts() {
 
-        try {
+
+
+    // GET PRODUCTS
+
+    async function fetchProducts(){
+
+
+        try{
+
 
             setLoading(true);
+
 
 
             const res = await fetch(API_URL);
 
 
-            if (!res.ok) {
+
+            if(!res.ok){
 
                 throw new Error("Failed to fetch products");
 
             }
 
 
+
             const data = await res.json();
 
 
-            setProducts(data);
+
+            // MongoDB _id convert to id
+
+            const formattedProducts = data.map(product=>({
+
+                ...product,
+
+                id: product._id || product.id
+
+            }));
 
 
-        } 
-        
-        catch (error) {
 
-            console.log("Fetch Error:", error);
+            setProducts(formattedProducts);
 
-        } 
-        
-        finally {
+
+
+        }
+
+
+        catch(error){
+
+
+            console.log("Fetch Error:",error);
+
+
+        }
+
+
+        finally{
+
 
             setLoading(false);
 
+
         }
+
 
     }
 
@@ -73,11 +104,15 @@ export function ProductProvider({ children }) {
 
 
 
+
+
+
     // ADD PRODUCT
-    async function addProduct(product) {
+
+    async function addProduct(product){
 
 
-        try {
+        try{
 
 
             const res = await fetch(
@@ -86,34 +121,35 @@ export function ProductProvider({ children }) {
 
                 {
 
-                    method: "POST",
+                    method:"POST",
 
-                    headers: {
+                    headers:{
 
-                        "Content-Type": "application/json"
+                        "Content-Type":"application/json"
 
                     },
 
 
-                    body: JSON.stringify({
+                    body:JSON.stringify({
 
-                        name: product.name,
 
-                        barcode: product.barcode,
+                        name:product.name,
 
-                        category: product.category,
+                        barcode:product.barcode,
 
-                        price: Number(product.price),
+                        category:product.category,
 
-                        quantity: Number(product.quantity),
+                        price:Number(product.price),
 
-                        description: product.description || "",
+                        quantity:Number(product.quantity),
+
+                        description:product.description || "",
 
                         expiry_date:
                         product.expiry_date || product.expiry
 
-                    })
 
+                    })
 
                 }
 
@@ -124,11 +160,11 @@ export function ProductProvider({ children }) {
             const data = await res.json();
 
 
-            console.log("Add Response:", data);
+
+            console.log("Add Response:",data);
 
 
 
-            // Refresh dashboard data
             fetchProducts();
 
 
@@ -136,10 +172,10 @@ export function ProductProvider({ children }) {
         }
 
 
-        catch(error) {
+        catch(error){
 
 
-            console.log("Add Error:", error);
+            console.log("Add Error:",error);
 
 
         }
@@ -153,11 +189,15 @@ export function ProductProvider({ children }) {
 
 
 
+
+
     // DELETE PRODUCT
-    async function deleteProduct(id) {
+
+    async function deleteProduct(id){
 
 
-        try {
+
+        try{
 
 
             const res = await fetch(
@@ -177,6 +217,7 @@ export function ProductProvider({ children }) {
             const data = await res.json();
 
 
+
             console.log("Delete Response:",data);
 
 
@@ -184,7 +225,9 @@ export function ProductProvider({ children }) {
             fetchProducts();
 
 
+
         }
+
 
 
         catch(error){
@@ -204,42 +247,60 @@ export function ProductProvider({ children }) {
 
 
 
+
+
     // UPDATE PRODUCT
-    async function updateProduct(product) {
+
+    async function updateProduct(product){
 
 
-        try {
+
+        try{
+
+
+            const id = product._id || product.id;
+
 
 
             const res = await fetch(
 
-                `${API_URL}/${product.id}`,
+                `${API_URL}/${id}`,
 
                 {
 
+
                     method:"PUT",
+
 
                     headers:{
 
+
                         "Content-Type":"application/json"
+
 
                     },
 
 
+
                     body:JSON.stringify({
+
 
                         name:product.name,
 
+
                         barcode:product.barcode,
+
 
                         category:product.category,
 
+
                         price:Number(product.price),
+
 
                         quantity:Number(product.quantity),
 
-                        expiry_date:
-                        product.expiry_date
+
+                        expiry_date:product.expiry_date
 
 
                     })
@@ -251,7 +312,9 @@ export function ProductProvider({ children }) {
 
 
 
+
             const data = await res.json();
+
 
 
             console.log("Update Response:",data);
@@ -261,7 +324,9 @@ export function ProductProvider({ children }) {
             fetchProducts();
 
 
+
         }
+
 
 
         catch(error){
@@ -280,31 +345,35 @@ export function ProductProvider({ children }) {
 
 
 
-    return (
+
+
+    return(
+
 
         <ProductContext.Provider
 
-            value={{
+        value={{
 
-                products,
+            products,
 
-                loading,
+            loading,
 
-                setProducts,
+            setProducts,
 
-                fetchProducts,
+            fetchProducts,
 
-                addProduct,
+            addProduct,
 
-                deleteProduct,
+            deleteProduct,
 
-                updateProduct
+            updateProduct
 
-            }}
+        }}
 
         >
 
-            {children}
+
+        {children}
 
 
         </ProductContext.Provider>
@@ -314,6 +383,8 @@ export function ProductProvider({ children }) {
 
 
 }
+
+
 
 
 
