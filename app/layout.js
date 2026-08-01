@@ -39,14 +39,45 @@ return(
 <html lang="en">
 
 
-<body className="
-bg-gradient-to-br
-from-green-50
-via-white
-to-green-100
+<body
+
+className="
 min-h-screen
 overflow-x-hidden
-">
+relative
+bg-cover
+bg-center
+bg-fixed
+"
+
+style={{
+
+backgroundImage:"url('/UHKDU.png')"
+
+}}
+
+>
+
+
+
+{/* Green Overlay */}
+
+<div
+
+className="
+fixed
+inset-0
+bg-green-900/60
+z-0
+"
+
+/>
+
+
+
+
+
+<div className="relative z-10">
 
 
 
@@ -59,10 +90,12 @@ overflow-x-hidden
 <OrderProvider>
 
 
+
 <Navbar />
 
 
 {children}
+
 
 
 <Footer />
@@ -75,6 +108,10 @@ overflow-x-hidden
 
 
 </AuthProvider>
+
+
+
+</div>
 
 
 
